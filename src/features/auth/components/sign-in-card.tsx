@@ -23,9 +23,13 @@ const SignInCard = ({ setState }: SignInCardProps) => {
   const { signIn } = useAuthActions();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [pending, setPending] = useState(false);
 
-  const handleProviderSignIn = (value: 'github' | 'google') => {
-    signIn(value);
+  const onProviderSignIn = (value: 'github' | 'google') => {
+    setPending(true);
+    signIn(value).finally(() => {
+      setPending(false);
+    });
   };
 
   return (
@@ -39,7 +43,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
       <CardContent className='space-y-5 px-0 pb-0'>
         <form className='space-y-2.5'>
           <Input
-            disabled={false}
+            disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder='Email'
@@ -47,7 +51,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder='Password'
@@ -62,7 +66,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
         <div className='flex flex-col gap-y-2.5'>
           <Button
             disabled={false}
-            onClick={() => {}}
+            onClick={() => onProviderSignIn('google')}
             variant='outline'
             size='lg'
             className='w-full relative'
@@ -72,7 +76,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
           <Button
             disabled={false}
-            onClick={() => handleProviderSignIn('github')}
+            onClick={() => onProviderSignIn('github')}
             variant='outline'
             size='lg'
             className='w-full relative'
