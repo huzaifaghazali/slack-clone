@@ -1,10 +1,9 @@
-interface WorkspaceIdPageProps {
-  params: {
-    workspaceId: string;
-  };
-}
+'use client';
 
-const WorkspaceIdPage = ({ params: { workspaceId } }: WorkspaceIdPageProps) => {
+import { useWorkspaceId } from '@/hooks/use-workspace-id';
+
+const WorkspaceIdPage = () => {
+  const workspaceId = useWorkspaceId();
 
   return <div>Workspace {workspaceId}</div>;
 };
