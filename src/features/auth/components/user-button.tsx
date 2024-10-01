@@ -32,7 +32,9 @@ export const UserButton = () => {
 
   function handleLogout() {
     signOut().finally(() => {
+      
       router.refresh();
+      location.reload();
     });
   }
 
