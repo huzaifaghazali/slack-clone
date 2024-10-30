@@ -167,12 +167,44 @@ const Editor = ({
 
   return (
     <div className='flex flex-col'>
+      <input
+        type='file'
+        accept='image/*'
+        ref={imageElementRef}
+        onChange={(e) => setImage(e.target.files![0])}
+        className='hidden'
+      />
       <div
         className={cn(
-          'flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-slate-300 focus-within:shadow-sm'
+          'flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:border-slate-300 focus-within:shadow-sm',
+          disabled && 'opacity-50'
         )}
       >
         <div ref={containerRef} className='ql-custom h-full' />
+        {!!image && (
+          <div className='p-2'>
+            <div className='group/image relative flex size-[62px] items-center justify-center'>
+              <Hint label='Remove image'>
+                <button
+                  onClick={() => {
+                    setImage(null);
+                    imageElementRef.current!.value = '';
+                  }}
+                  className='absolute -right-2.5 -top-2.5 z-[4] hidden size-6 items-center justify-center rounded-full border-2 border-white bg-black/70 text-white hover:bg-black group-hover/image:flex'
+                >
+                  <XIcon className='size-3.5' />
+                </button>
+              </Hint>
+              <Image
+                src={URL.createObjectURL(image)}
+                alt='uploaded'
+                fill
+                className='overflow-hidden rounded-xl border object-cover'
+              />
+            </div>
+          </div>
+        )}
+
         <div className='z-[5] flex px-2 pb-2'>
           <Hint
             label={isToolbarVisible ? 'Hide formatting' : 'Show formatting'}
@@ -199,7 +231,7 @@ const Editor = ({
                 disabled={disabled}
                 size='iconSm'
                 variant='ghost'
-                onClick={() => {}}
+                onClick={() => imageElementRef.current!.click()}
               >
                 <ImageIcon className='size-4' />
               </Button>
