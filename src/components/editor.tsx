@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 
 import 'quill/dist/quill.snow.css';
 import { Button } from './ui/button';
+import { EmojiPopover } from './emoji-popover';
 
 type EditorValue = {
   image: File | null;
@@ -154,6 +155,12 @@ const Editor = ({
     }
   };
 
+  const onEmojiSelect = (emoji: any) => {
+    const quill = quillRef.current;
+
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
   // We consider the editor empty if either:
   //  the text content of the editor is empty, after removing all HTML tags (we use a regular expression to remove all HTML tags, and then check that the resulting string is empty)
   const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
@@ -167,7 +174,9 @@ const Editor = ({
       >
         <div ref={containerRef} className='ql-custom h-full' />
         <div className='z-[5] flex px-2 pb-2'>
-          <Hint label={isToolbarVisible  ? 'Hide formatting' : 'Show formatting'}>
+          <Hint
+            label={isToolbarVisible ? 'Hide formatting' : 'Show formatting'}
+          >
             <Button
               disabled={disabled}
               size='iconSm'
@@ -178,9 +187,11 @@ const Editor = ({
             </Button>
           </Hint>
 
-          <Button disabled={disabled} size='iconSm' variant='ghost'>
-            <Smile className='size-4' />
-          </Button>
+          <EmojiPopover onEmojiSelect={onEmojiSelect}>
+            <Button disabled={disabled} size='iconSm' variant='ghost'>
+              <Smile className='size-4' />
+            </Button>
+          </EmojiPopover>
 
           {variant === 'create' && (
             <Hint label='Image'>
